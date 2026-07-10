@@ -1,0 +1,9 @@
+{
+  "name": "Academia Tia Lu",
+  "short_name": "Tia Lu",
+  "description": "Organize sua vida financeira e sua rotina com quem entende do seu momento.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f1e6",
+  "theme_color": "#16213e"
+}

@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --color-navy: #16213e;
+  --color-navy-light: #22315a;
+  --color-cream: #f7f1e6;
+  --color-cream-soft: #efe7d6;
+  --color-card: #ffffff;
+  --color-gold: #c9a15a;
+  --color-gold-dark: #b08a45;
+  --color-ink: #16213e;
+  --color-ink-soft: #6b7280;
+  --color-success: #2f8f5b;
+  --color-danger: #c0503a;
+}
+
+@theme inline {
+  --color-navy: var(--color-navy);
+  --color-navy-light: var(--color-navy-light);
+  --color-cream: var(--color-cream);
+  --color-cream-soft: var(--color-cream-soft);
+  --color-card: var(--color-card);
+  --color-gold: var(--color-gold);
+  --color-gold-dark: var(--color-gold-dark);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* App shell caps the reading width on large screens but never breaks the
+   mobile layout the prototype defines — mobile always gets the full-width
+   single-column treatment. */
+.app-shell {
+  max-width: 480px;
+  margin-inline: auto;
+}
