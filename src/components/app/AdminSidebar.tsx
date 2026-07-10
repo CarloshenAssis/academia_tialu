@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { adminNavItems } from "@/lib/mock-data";
+import { adminNavItems } from "@/lib/nav";
 
 export function AdminSidebar() {
   const pathname = usePathname();

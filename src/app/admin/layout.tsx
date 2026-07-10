@@ -1,9 +1,16 @@
 import { ReactNode } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/app/AdminSidebar";
-import { adminNavItems } from "@/lib/mock-data";
+import { adminNavItems } from "@/lib/nav";
+import { getCurrentProfile } from "@/lib/queries";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const profile = await getCurrentProfile();
+
+  if (!profile) redirect("/login");
+  if (profile.role !== "admin") redirect("/home");
+
   return (
     <div className="flex min-h-screen w-full flex-1 bg-cream">
       <AdminSidebar />

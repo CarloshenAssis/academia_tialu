@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { courses } from "@/lib/mock-data";
+import { getCategorias, getCursos } from "@/lib/queries";
 
-export default function CursosPage() {
-  const categories = Array.from(new Set(courses.map((c) => c.category)));
+export default async function CursosPage() {
+  const [categorias, cursos] = await Promise.all([getCategorias(), getCursos()]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -18,30 +18,30 @@ export default function CursosPage() {
         />
       </label>
 
-      {categories.map((category) => (
-        <section key={category} className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold text-ink">{category}</h2>
-          <div className="flex flex-col gap-3">
-            {courses
-              .filter((c) => c.category === category)
-              .map((course) => (
+      {categorias.map((categoria) => {
+        const cursosDaCategoria = cursos.filter((c) => c.categoria_id === categoria.id);
+        if (cursosDaCategoria.length === 0) return null;
+        return (
+          <section key={categoria.id} className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold text-ink">{categoria.nome}</h2>
+            <div className="flex flex-col gap-3">
+              {cursosDaCategoria.map((curso) => (
                 <Link
-                  key={course.id}
-                  href={`/cursos/${course.id}`}
+                  key={curso.id}
+                  href={`/cursos/${curso.id}`}
                   className="flex items-center gap-3 rounded-xl bg-card p-3 shadow-[0_2px_10px_rgba(22,33,62,0.06)]"
                 >
                   <div className="h-14 w-14 shrink-0 rounded-lg bg-navy" />
                   <div>
-                    <p className="text-sm font-medium leading-snug text-ink">{course.title}</p>
-                    <p className="text-xs text-ink-soft">
-                      {course.lessonsCount} aulas · {course.duration}
-                    </p>
+                    <p className="text-sm font-medium leading-snug text-ink">{curso.titulo}</p>
+                    <p className="text-xs text-ink-soft">{categoria.nome}</p>
                   </div>
                 </Link>
               ))}
-          </div>
-        </section>
-      ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

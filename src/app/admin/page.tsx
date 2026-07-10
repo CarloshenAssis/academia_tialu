@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { adminStats, adminNavItems } from "@/lib/mock-data";
+import { adminNavItems } from "@/lib/nav";
+import { getAdminStats } from "@/lib/admin-queries";
 import { StatCard } from "@/components/app/StatCard";
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const stats = await getAdminStats();
+
   return (
     <div className="flex max-w-3xl flex-col gap-6">
       <div>
@@ -12,10 +15,10 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <StatCard label="Assinantes ativos" value={adminStats.activeSubscribers} />
-        <StatCard label="Novos este mês" value={adminStats.newThisMonth} />
-        <StatCard label="Cursos publicados" value={adminStats.publishedCourses} />
-        <StatCard label="Posts na comunidade" value={adminStats.communityPosts} />
+        <StatCard label="Assinantes ativos" value={stats.assinantesAtivos} />
+        <StatCard label="Novos este mês" value={stats.novosEsteMes} />
+        <StatCard label="Cursos publicados" value={stats.cursosPublicados} />
+        <StatCard label="Posts na comunidade" value={stats.postsComunidade} />
       </div>
 
       <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">
