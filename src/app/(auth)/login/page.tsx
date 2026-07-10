@@ -2,16 +2,27 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { createClient } from "@/lib/supabase/client";
 import { registerDevice } from "@/lib/device";
 
+const subscribe = () => () => {};
+
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const aviso = useSyncExternalStore(
+    subscribe,
+    () =>
+      new URLSearchParams(window.location.search).get("motivo") === "outro-dispositivo"
+        ? "Sua conta foi acessada em outro dispositivo, então esta sessão foi encerrada."
+        : null,
+    () => null
+  );
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,6 +57,10 @@ export default function LoginPage() {
     <>
       <h1 className="font-display text-2xl font-bold text-ink">Bem-vinda</h1>
       <p className="mt-1 text-sm text-ink-soft">Entre para continuar aprendendo</p>
+
+      {aviso && (
+        <p className="mt-4 rounded-xl bg-gold/15 px-4 py-3 text-sm text-gold-dark">{aviso}</p>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
         <Input label="E-mail" name="email" type="email" placeholder="voce@email.com" autoComplete="email" required />

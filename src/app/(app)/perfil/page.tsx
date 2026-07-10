@@ -6,7 +6,7 @@ import { LogoutButton } from "@/components/app/LogoutButton";
 const menuItems = [
   { label: "Configurações", href: "#" },
   { label: "Alterar senha", href: "#" },
-  { label: "Meus dispositivos conectados", href: "#" },
+  { label: "Meus dispositivos conectados", href: "/perfil/dispositivos" },
   { label: "Central de ajuda", href: "#" },
   { label: "Termos e privacidade", href: "#" },
 ];
