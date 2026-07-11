@@ -48,3 +48,44 @@ body {
   max-width: 480px;
   margin-inline: auto;
 }
+
+/* Painel animado do desktop nas telas de login/cadastro. */
+.auth-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-navy) 0%,
+    var(--color-navy-light) 40%,
+    var(--color-gold-dark) 75%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% 200%;
+  animation: auth-gradient-shift 14s ease-in-out infinite;
+}
+
+@keyframes auth-gradient-shift {
+  0% {
+    background-position: 0% 20%;
+  }
+  50% {
+    background-position: 100% 80%;
+  }
+  100% {
+    background-position: 0% 20%;
+  }
+}
+
+.auth-orb {
+  animation: auth-orb-float 9s ease-in-out infinite;
+}
+
+@keyframes auth-orb-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-16px, 20px) scale(1.08);
+    opacity: 0.8;
+  }
+}
