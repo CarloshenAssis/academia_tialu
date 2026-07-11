@@ -16,12 +16,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Academia Tia Lu",
   description:
-    "Organize sua vida financeira e sua rotina com quem entende do seu momento.",
+    "Cursos, materiais e comunidade para tias de igreja e professoras que ensinam crianças.",
   manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#16213e",
+  themeColor: "#2b6b60",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

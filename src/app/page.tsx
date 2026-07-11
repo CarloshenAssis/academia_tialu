@@ -38,13 +38,12 @@ const recursos = [
     titulo: "Dicas pra prender a atenção",
     descricao: "Estratégias práticas pra turma ficar engajada do início ao fim.",
   },
+  {
+    icon: Sparkles,
+    titulo: "Cursos novos toda semana",
+    descricao: "Conteúdo sempre atualizado, direto da experiência da Tia Lu.",
+  },
 ];
-
-const destaqueCursosNovos = {
-  icon: Sparkles,
-  titulo: "Cursos novos toda semana",
-  descricao: "Conteúdo sempre atualizado, direto da experiência da Tia Lu.",
-};
 
 const publico = [
   "Tias de igreja e líderes de EBD",
@@ -57,13 +56,50 @@ export default function HomeLandingPage() {
     <main className="flex min-h-screen w-full flex-col overflow-x-hidden bg-cream text-ink">
       {/* Hero */}
       <section className="relative flex flex-col items-center overflow-hidden bg-navy px-6 pb-24 pt-16 text-center text-cream md:pb-32 md:pt-24">
-        <div className="blob-float pointer-events-none absolute -top-16 -left-20 h-64 w-64 rounded-full bg-gold/20 blur-3xl" />
-        <div className="blob-float-slow pointer-events-none absolute top-10 right-[-4rem] h-72 w-72 rounded-full bg-navy-light/60 blur-3xl" />
-        <div className="blob-float pointer-events-none absolute bottom-0 left-1/3 h-56 w-56 rounded-full bg-gold-dark/10 blur-3xl" />
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full text-cream/20"
+          viewBox="0 0 1440 500"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden
+        >
+          <path
+            d="M40,130 C130,70 230,70 300,120 C380,175 460,100 550,80"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M1080,50 C1130,95 1190,65 1230,105 C1270,145 1330,80 1400,35"
+            fill="none"
+            stroke="var(--color-gold)"
+            strokeOpacity="0.55"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M110,230 C150,265 95,320 135,360 C165,392 125,430 155,462"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M1150,230 C1195,265 1255,245 1285,285 C1310,318 1360,300 1390,330"
+            fill="none"
+            stroke="var(--color-gold)"
+            strokeOpacity="0.45"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
 
         <div className="relative z-10 flex flex-col items-center">
           <Logo size={80} className="mb-6" />
-          <h1 className="font-display text-3xl font-bold md:text-5xl">Academia Tia Lu</h1>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-gold md:text-sm">
+            Academia
+          </p>
+          <h1 className="font-display text-3xl font-bold md:text-5xl">Tia Lu</h1>
           <p className="mt-4 max-w-md text-sm leading-relaxed text-cream/80 md:max-w-xl md:text-lg">
             O espaço de quem ensina, cuida e encanta crianças — feito para tias de
             igreja, professoras de EBD e educadoras que querem ideias prontas pra
@@ -118,46 +154,19 @@ export default function HomeLandingPage() {
             O que você encontra aqui
           </h2>
 
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
-            {/* Card destaque: EBD */}
-            <div className="relative overflow-hidden rounded-[2rem] bg-navy p-7 text-cream md:p-8">
-              <div className="blob-float pointer-events-none absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-gold/20 blur-2xl" />
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gold/20 text-gold">
-                <BookOpen size={24} />
-              </span>
-              <h3 className="relative mt-5 font-display text-xl font-bold">
-                {recursos[0].titulo}
-              </h3>
-              <p className="relative mt-2 max-w-sm text-sm leading-relaxed text-cream/75">
-                {recursos[0].descricao}
-              </p>
-            </div>
-
-            {/* Card destaque: Cursos novos */}
-            <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-gold/25 via-gold/10 to-transparent p-7 md:p-8">
-              <div className="blob-float-slow pointer-events-none absolute -top-10 -left-10 h-40 w-40 rounded-full bg-gold/25 blur-2xl" />
-              <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-card text-gold-dark shadow-sm">
-                <destaqueCursosNovos.icon size={24} />
-              </span>
-              <h3 className="relative mt-5 font-display text-xl font-bold text-ink">
-                {destaqueCursosNovos.titulo}
-              </h3>
-              <p className="relative mt-2 max-w-sm text-sm leading-relaxed text-ink-soft">
-                {destaqueCursosNovos.descricao}
-              </p>
-            </div>
-
-            {/* Cards menores */}
-            {recursos.slice(1).map(({ icon: Icon, titulo, descricao }) => (
+          <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+            {recursos.map(({ icon: Icon, titulo, descricao }) => (
               <div
                 key={titulo}
-                className="flex flex-col gap-3 rounded-[1.75rem] bg-card p-6 shadow-[0_2px_14px_rgba(22,33,62,0.06)] md:col-span-1"
+                className="flex items-start gap-4 rounded-2xl bg-card/70 p-4 shadow-[0_2px_10px_rgba(22,33,62,0.04)] backdrop-blur-sm"
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/20 text-gold-dark">
-                  <Icon size={22} />
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/20 text-gold-dark">
+                  <Icon size={20} />
                 </span>
-                <h3 className="font-display text-base font-bold text-ink">{titulo}</h3>
-                <p className="text-sm leading-relaxed text-ink-soft">{descricao}</p>
+                <div>
+                  <h3 className="font-display text-base font-bold text-ink">{titulo}</h3>
+                  <p className="mt-0.5 text-sm leading-relaxed text-ink-soft">{descricao}</p>
+                </div>
               </div>
             ))}
           </div>

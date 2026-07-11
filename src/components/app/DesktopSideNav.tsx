@@ -19,12 +19,11 @@ export function DesktopSideNav() {
   return (
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col bg-navy px-5 py-8 text-cream md:flex">
       <div className="flex items-center gap-2.5">
-        <Logo size={32} />
-        <span className="font-display text-base font-bold leading-tight">
-          Academia
-          <br />
-          Tia Lu
-        </span>
+        <Logo size={36} />
+        <div className="leading-tight">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gold">Academia</p>
+          <p className="font-display text-lg font-bold">Tia Lu</p>
+        </div>
       </div>
       <nav className="mt-8 flex flex-col gap-1">
         {items.map(({ href, label, icon: Icon }) => {

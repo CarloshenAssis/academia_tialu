@@ -1,37 +1,27 @@
 export function Logo({ size = 64, className = "" }: { size?: number; className?: string }) {
+  const iconSize = size * 0.72;
+
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      className={className}
+    <div
+      className={`flex shrink-0 items-center justify-center rounded-[22%] bg-cream ${className}`}
+      style={{ width: size, height: size }}
       role="img"
       aria-label="Academia Tia Lu"
     >
-      <defs>
-        <linearGradient id="tialu-gold" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#dbb877" />
-          <stop offset="100%" stopColor="#b08a45" />
-        </linearGradient>
-      </defs>
-      <circle cx="32" cy="32" r="31" fill="url(#tialu-gold)" />
-      <circle cx="32" cy="32" r="30.25" fill="none" stroke="#16213e" strokeOpacity="0.12" />
-      <text
-        x="32"
-        y="39"
-        textAnchor="middle"
-        fontFamily="var(--font-playfair), Georgia, serif"
-        fontWeight="700"
-        fontSize="23"
-        fill="#16213e"
-      >
-        TL
-      </text>
-      <path
-        d="M46 17.5 L47.3 20.5 L50.3 21.8 L47.3 23.1 L46 26.1 L44.7 23.1 L41.7 21.8 L44.7 20.5 Z"
-        fill="#f7f1e6"
-        opacity="0.9"
-      />
-    </svg>
+      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none">
+        <path
+          d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"
+          className="fill-teal"
+        />
+        <path
+          d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"
+          className="stroke-teal"
+          strokeWidth={2}
+          strokeLinecap="round"
+        />
+        <path d="M22 10v5" className="stroke-teal" strokeWidth={2} strokeLinecap="round" />
+        <circle cx={22} cy={16.5} r={1.8} className="fill-gold-dark" />
+      </svg>
+    </div>
   );
 }
