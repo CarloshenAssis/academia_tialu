@@ -167,12 +167,17 @@ export async function getComunidadePosts(): Promise<PostComAutor[]> {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("comunidade_posts")
     .select(
-      "id, conteudo, created_at, autor:profiles_publicas(full_name, role), curtidas:comunidade_curtidas(user_id), respostas:comunidade_respostas(id)"
+      "id, conteudo, created_at, autor:profiles_publicas!comunidade_posts_user_id_fkey(full_name, role), curtidas:comunidade_curtidas(user_id), respostas:comunidade_respostas(id)"
     )
     .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getComunidadePosts:", error.message);
+    return [];
+  }
 
   type Row = {
     id: string;
