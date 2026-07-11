@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/app/LogoutButton";
 
@@ -22,7 +22,7 @@ export default async function PerfilPage() {
   const { data: profile } = user
     ? await supabase
         .from("profiles")
-        .select("full_name, email, plan, renews_at")
+        .select("full_name, email, plan, renews_at, role")
         .eq("id", user.id)
         .single()
     : { data: null };
@@ -51,6 +51,18 @@ export default async function PerfilPage() {
         </span>
         {renewsAt && <p className="mt-1 text-xs text-ink-soft">Renovação em {renewsAt}</p>}
       </div>
+
+      {profile?.role === "admin" && (
+        <Link
+          href="/admin"
+          className="flex items-center justify-between rounded-xl bg-navy p-4 text-cream"
+        >
+          <span className="flex items-center gap-2 text-sm font-semibold">
+            <ShieldCheck size={18} className="text-gold" /> Painel da Tia Lu
+          </span>
+          <ChevronRight size={16} />
+        </Link>
+      )}
 
       <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">
         {menuItems.map((item) => (
