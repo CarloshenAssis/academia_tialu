@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Check } from "lucide-react";
 import type { Aula } from "@/lib/database.types";
+import { Cover } from "@/components/app/Cover";
 import { toggleAulaConcluida } from "./actions";
 
 type Props = {
@@ -113,6 +114,9 @@ export function CursoPlayer({ curso, aulas, concluidasIniciais }: Props) {
                     >
                       {feita ? <Check size={13} /> : i + 1}
                     </span>
+                    {aula.capa_url && (
+                      <Cover url={aula.capa_url} className="h-10 w-16 shrink-0 rounded-md" />
+                    )}
                     <div className="flex-1">
                       <p className={`text-sm leading-snug ${atual ? "font-semibold text-ink" : "text-ink"}`}>
                         {aula.titulo}

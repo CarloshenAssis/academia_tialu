@@ -170,7 +170,7 @@ export async function getComunidadePosts(): Promise<PostComAutor[]> {
   const { data } = await supabase
     .from("comunidade_posts")
     .select(
-      "id, conteudo, created_at, autor:profiles(full_name, role), curtidas:comunidade_curtidas(user_id), respostas:comunidade_respostas(id)"
+      "id, conteudo, created_at, autor:profiles_publicas(full_name, role), curtidas:comunidade_curtidas(user_id), respostas:comunidade_respostas(id)"
     )
     .order("created_at", { ascending: false });
 

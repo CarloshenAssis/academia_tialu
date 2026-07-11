@@ -59,6 +59,15 @@ export default async function AdminCursoDetailPage({
               className="w-24 rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
             />
           </div>
+          <label className="flex flex-col gap-1 text-xs text-ink-soft">
+            Capa da aula (opcional)
+            <input
+              name="capa"
+              type="file"
+              accept="image/*"
+              className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none file:mr-3 file:rounded-md file:border-0 file:bg-navy file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-cream"
+            />
+          </label>
         </AdminForm>
       </section>
 
@@ -75,6 +84,14 @@ export default async function AdminCursoDetailPage({
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/10 text-[11px] font-semibold text-ink-soft">
                   {i + 1}
                 </span>
+                {aula.capa_url && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={aula.capa_url}
+                    alt=""
+                    className="h-10 w-16 shrink-0 rounded-md object-cover"
+                  />
+                )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-ink">{aula.titulo}</p>
                   <p className="truncate text-xs text-ink-soft">

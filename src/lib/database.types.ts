@@ -44,6 +44,7 @@ export interface Aula {
   youtube_video_id: string;
   duracao_min: number;
   ordem: number;
+  capa_url: string | null;
   created_at: string;
 }
 

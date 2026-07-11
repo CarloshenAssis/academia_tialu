@@ -14,6 +14,19 @@ async function assertAdmin() {
   return { supabase, ok: (data as { role: string } | null)?.role === "admin" };
 }
 
+async function uploadCapa(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  file: FormDataEntryValue | null
+): Promise<{ url: string | null; error?: string }> {
+  if (!(file instanceof File) || file.size === 0) return { url: null };
+
+  const path = `${crypto.randomUUID()}-${file.name}`;
+  const { error } = await supabase.storage.from("capas").upload(path, file);
+  if (error) return { url: null, error: error.message };
+
+  return { url: supabase.storage.from("capas").getPublicUrl(path).data.publicUrl };
+}
+
 // ---- Categorias ----
 
 export async function criarCategoria(formData: FormData) {
@@ -54,13 +67,8 @@ export async function criarCurso(formData: FormData) {
   const { supabase, ok } = await assertAdmin();
   if (!ok) return { error: "Sem permissão." };
 
-  let capaUrl: string | null = null;
-  if (capa instanceof File && capa.size > 0) {
-    const path = `${crypto.randomUUID()}-${capa.name}`;
-    const { error: uploadError } = await supabase.storage.from("capas").upload(path, capa);
-    if (uploadError) return { error: `Falha ao enviar a capa: ${uploadError.message}` };
-    capaUrl = supabase.storage.from("capas").getPublicUrl(path).data.publicUrl;
-  }
+  const { url: capaUrl, error: capaError } = await uploadCapa(supabase, capa);
+  if (capaError) return { error: `Falha ao enviar a capa: ${capaError}` };
 
   const { error } = await supabase.from("cursos").insert({
     titulo,
@@ -108,6 +116,7 @@ export async function criarAula(formData: FormData) {
   const youtubeId = String(formData.get("youtube_video_id") ?? "").trim();
   const duracao = Number(formData.get("duracao_min") ?? 0);
   const ordem = Number(formData.get("ordem") ?? 0);
+  const capa = formData.get("capa");
   if (!cursoId || !titulo || !youtubeId) {
     return { error: "Preencha título e ID do vídeo do YouTube." };
   }
@@ -115,12 +124,16 @@ export async function criarAula(formData: FormData) {
   const { supabase, ok } = await assertAdmin();
   if (!ok) return { error: "Sem permissão." };
 
+  const { url: capaUrl, error: capaError } = await uploadCapa(supabase, capa);
+  if (capaError) return { error: `Falha ao enviar a capa: ${capaError}` };
+
   const { error } = await supabase.from("aulas").insert({
     curso_id: cursoId,
     titulo,
     youtube_video_id: youtubeId,
     duracao_min: duracao,
     ordem,
+    capa_url: capaUrl,
   });
   if (error) return { error: error.message };
 

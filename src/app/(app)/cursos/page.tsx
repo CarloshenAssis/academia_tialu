@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { getCategorias, getCursos } from "@/lib/queries";
+import { Cover } from "@/components/app/Cover";
 
 export default async function CursosPage() {
   const [categorias, cursos] = await Promise.all([getCategorias(), getCursos()]);
@@ -31,7 +32,7 @@ export default async function CursosPage() {
                   href={`/cursos/${curso.id}`}
                   className="flex items-center gap-3 rounded-xl bg-card p-3 shadow-[0_2px_10px_rgba(22,33,62,0.06)]"
                 >
-                  <div className="h-14 w-14 shrink-0 rounded-lg bg-navy" />
+                  <Cover url={curso.capa_url} className="h-14 w-14 shrink-0 rounded-lg" />
                   <div>
                     <p className="text-sm font-medium leading-snug text-ink">{curso.titulo}</p>
                     <p className="text-xs text-ink-soft">{categoria.nome}</p>
