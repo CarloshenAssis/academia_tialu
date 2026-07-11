@@ -134,7 +134,20 @@ export async function getMateriais(): Promise<(Material & { curso: Pick<Curso, "
     .from("materiais")
     .select("*, curso:cursos(titulo)")
     .order("created_at");
-  return (data as (Material & { curso: Pick<Curso, "titulo"> | null })[]) ?? [];
+
+  const materiais = (data as (Material & { curso: Pick<Curso, "titulo"> | null })[]) ?? [];
+
+  // arquivo_url guarda o caminho no bucket privado "materiais"; geramos um
+  // link assinado de curta duração na hora de exibir, em vez de expor o
+  // bucket publicamente.
+  return Promise.all(
+    materiais.map(async (material) => {
+      const { data: signed } = await supabase.storage
+        .from("materiais")
+        .createSignedUrl(material.arquivo_url, 60 * 10);
+      return { ...material, arquivo_url: signed?.signedUrl ?? "#" };
+    })
+  );
 }
 
 export type PostComAutor = {

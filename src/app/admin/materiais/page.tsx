@@ -20,24 +20,16 @@ export default async function AdminMateriaisPage() {
           placeholder="Título do material"
           className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
         />
-        <div className="flex gap-2">
-          <select
-            name="tipo"
-            className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
-          >
-            {["PDF", "Planilha", "Checklist", "Mapa"].map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-          <input
-            name="tamanho_kb"
-            type="number"
-            placeholder="Tamanho (KB)"
-            className="w-36 rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
-          />
-        </div>
+        <select
+          name="tipo"
+          className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
+        >
+          {["PDF", "Planilha", "Checklist", "Mapa"].map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
         <select
           name="curso_id"
           className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
@@ -49,11 +41,15 @@ export default async function AdminMateriaisPage() {
             </option>
           ))}
         </select>
-        <input
-          name="arquivo_url"
-          placeholder="Link do arquivo (URL)"
-          className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-gold"
-        />
+        <label className="flex flex-col gap-1 text-xs text-ink-soft">
+          Arquivo (PDF, imagem, planilha...)
+          <input
+            name="arquivo"
+            type="file"
+            required
+            className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none file:mr-3 file:rounded-md file:border-0 file:bg-navy file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-cream"
+          />
+        </label>
       </AdminForm>
 
       <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">

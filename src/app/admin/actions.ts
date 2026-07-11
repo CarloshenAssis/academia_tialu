@@ -48,15 +48,25 @@ export async function criarCurso(formData: FormData) {
   const titulo = String(formData.get("titulo") ?? "").trim();
   const descricao = String(formData.get("descricao") ?? "").trim();
   const categoriaId = String(formData.get("categoria_id") ?? "");
+  const capa = formData.get("capa");
   if (!titulo) return { error: "Informe o título do curso." };
 
   const { supabase, ok } = await assertAdmin();
   if (!ok) return { error: "Sem permissão." };
 
+  let capaUrl: string | null = null;
+  if (capa instanceof File && capa.size > 0) {
+    const path = `${crypto.randomUUID()}-${capa.name}`;
+    const { error: uploadError } = await supabase.storage.from("capas").upload(path, capa);
+    if (uploadError) return { error: `Falha ao enviar a capa: ${uploadError.message}` };
+    capaUrl = supabase.storage.from("capas").getPublicUrl(path).data.publicUrl;
+  }
+
   const { error } = await supabase.from("cursos").insert({
     titulo,
     descricao,
     categoria_id: categoriaId || null,
+    capa_url: capaUrl,
     publicado: true,
   });
   if (error) return { error: error.message };
@@ -152,19 +162,27 @@ export async function criarMaterial(formData: FormData) {
   const titulo = String(formData.get("titulo") ?? "").trim();
   const tipo = String(formData.get("tipo") ?? "PDF");
   const cursoId = String(formData.get("curso_id") ?? "");
-  const arquivoUrl = String(formData.get("arquivo_url") ?? "").trim();
-  const tamanho = Number(formData.get("tamanho_kb") ?? 0);
-  if (!titulo || !arquivoUrl) return { error: "Informe título e link do arquivo." };
+  const arquivo = formData.get("arquivo");
+  if (!titulo) return { error: "Informe o título do material." };
+  if (!(arquivo instanceof File) || arquivo.size === 0) {
+    return { error: "Selecione um arquivo para enviar." };
+  }
 
   const { supabase, ok } = await assertAdmin();
   if (!ok) return { error: "Sem permissão." };
+
+  const path = `${crypto.randomUUID()}-${arquivo.name}`;
+  const { error: uploadError } = await supabase.storage
+    .from("materiais")
+    .upload(path, arquivo);
+  if (uploadError) return { error: `Falha ao enviar o arquivo: ${uploadError.message}` };
 
   const { error } = await supabase.from("materiais").insert({
     titulo,
     tipo,
     curso_id: cursoId || null,
-    arquivo_url: arquivoUrl,
-    tamanho_kb: tamanho,
+    arquivo_url: path,
+    tamanho_kb: Math.max(1, Math.round(arquivo.size / 1024)),
   });
   if (error) return { error: error.message };
 
@@ -177,8 +195,18 @@ export async function excluirMaterial(id: string) {
   const { supabase, ok } = await assertAdmin();
   if (!ok) return { error: "Sem permissão." };
 
+  const { data: material } = await supabase
+    .from("materiais")
+    .select("arquivo_url")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase.from("materiais").delete().eq("id", id);
   if (error) return { error: error.message };
+
+  if (material?.arquivo_url) {
+    await supabase.storage.from("materiais").remove([material.arquivo_url]);
+  }
 
   revalidatePath("/admin/materiais");
   revalidatePath("/materiais");

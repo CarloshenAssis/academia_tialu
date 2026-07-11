@@ -38,6 +38,15 @@ export default async function AdminCursosPage() {
             </option>
           ))}
         </select>
+        <label className="flex flex-col gap-1 text-xs text-ink-soft">
+          Capa do curso (opcional)
+          <input
+            name="capa"
+            type="file"
+            accept="image/*"
+            className="rounded-lg border border-ink/10 bg-cream px-3 py-2 text-sm outline-none file:mr-3 file:rounded-md file:border-0 file:bg-navy file:px-2.5 file:py-1 file:text-xs file:font-semibold file:text-cream"
+          />
+        </label>
       </AdminForm>
 
       <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">
