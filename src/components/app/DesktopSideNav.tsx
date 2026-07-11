@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, BookOpen, Users, FileText, User } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 const items = [
   { href: "/home", label: "Início", icon: Home },
@@ -17,7 +18,14 @@ export function DesktopSideNav() {
 
   return (
     <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col bg-navy px-5 py-8 text-cream md:flex">
-      <span className="font-display text-lg font-bold">Academia Tia Lu</span>
+      <div className="flex items-center gap-2.5">
+        <Logo size={32} />
+        <span className="font-display text-base font-bold leading-tight">
+          Academia
+          <br />
+          Tia Lu
+        </span>
+      </div>
       <nav className="mt-8 flex flex-col gap-1">
         {items.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);

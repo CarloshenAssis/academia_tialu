@@ -3,13 +3,21 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { adminNavItems } from "@/lib/nav";
+import { Logo } from "@/components/ui/Logo";
 
 export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col bg-navy px-5 py-8 text-cream md:flex">
-      <span className="font-display text-lg font-bold">Academia Tia Lu</span>
+      <div className="flex items-center gap-2.5">
+        <Logo size={32} />
+        <span className="font-display text-base font-bold leading-tight">
+          Academia
+          <br />
+          Tia Lu
+        </span>
+      </div>
       <nav className="mt-8 flex flex-col gap-1">
         {adminNavItems.map((item) => {
           const active = pathname === item.href;
