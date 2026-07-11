@@ -89,3 +89,12 @@ body {
     opacity: 0.8;
   }
 }
+
+/* Manchas orgânicas usadas na landing page pra quebrar o visual quadrado. */
+.blob-float {
+  animation: auth-orb-float 12s ease-in-out infinite;
+}
+
+.blob-float-slow {
+  animation: auth-orb-float 16s ease-in-out infinite reverse;
+}
