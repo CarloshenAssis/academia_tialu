@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { PwaRegister } from "@/components/PwaRegister";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -18,6 +19,15 @@ export const metadata: Metadata = {
   description:
     "Cursos, materiais e comunidade para tias de igreja e professoras que ensinam crianças.",
   manifest: "/manifest.json",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Tia Lu",
+  },
 };
 
 export const viewport: Viewport = {
@@ -38,6 +48,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink">
+        <PwaRegister />
         {children}
       </body>
     </html>
