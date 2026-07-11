@@ -5,7 +5,7 @@
 
 export type UserRole = "aluno" | "admin";
 export type PlanType = "mensal" | "anual";
-export type PlanStatus = "ativo" | "atrasado" | "cancelado";
+export type PlanStatus = "ativo" | "atrasado" | "cancelado" | "pendente";
 
 export interface Profile {
   id: string;
@@ -15,6 +15,9 @@ export interface Profile {
   plan: PlanType;
   plan_status: PlanStatus;
   renews_at: string | null;
+  asaas_customer_id: string | null;
+  asaas_subscription_id: string | null;
+  cpf_cnpj: string | null;
   created_at: string;
 }
 

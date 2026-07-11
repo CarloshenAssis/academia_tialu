@@ -1,8 +1,20 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/home", "/cursos", "/materiais", "/comunidade", "/perfil", "/admin"];
+const PROTECTED_PREFIXES = [
+  "/home",
+  "/cursos",
+  "/materiais",
+  "/comunidade",
+  "/perfil",
+  "/admin",
+  "/assinatura",
+];
 const AUTH_PREFIXES = ["/login", "/cadastro"];
+// /admin tem seu próprio guard de role (redireciona não-admin pra /home,
+// que por sua vez passa pela trava abaixo). /assinatura precisa ficar
+// acessível pra quem ainda não pagou, senão gera loop de redirect.
+const PAYWALL_EXEMPT_PREFIXES = ["/admin", "/assinatura"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -44,6 +56,20 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/home";
     return NextResponse.redirect(url);
+  }
+
+  if (user && isProtected && !PAYWALL_EXEMPT_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("plan_status, role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile && profile.role !== "admin" && profile.plan_status !== "ativo") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/assinatura";
+      return NextResponse.redirect(url);
+    }
   }
 
   return response;

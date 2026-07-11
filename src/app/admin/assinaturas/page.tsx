@@ -4,6 +4,7 @@ const statusLabel: Record<string, { texto: string; cor: string }> = {
   ativo: { texto: "Ativo", cor: "bg-success/15 text-success" },
   atrasado: { texto: "Atrasado", cor: "bg-danger/15 text-danger" },
   cancelado: { texto: "Cancelado", cor: "bg-ink/10 text-ink-soft" },
+  pendente: { texto: "Pendente", cor: "bg-gold/20 text-gold-dark" },
 };
 
 const planLabel: Record<string, string> = { mensal: "Mensal", anual: "Anual" };
@@ -16,7 +17,7 @@ export default async function AdminAssinaturasPage() {
       <div>
         <h1 className="font-display text-xl font-bold text-ink">Assinaturas</h1>
         <p className="text-sm text-ink-soft">
-          Planos e status de cobrança. A cobrança automática será integrada na próxima fase.
+          Planos e status de cobrança, sincronizados automaticamente com o Asaas.
         </p>
       </div>
 
@@ -32,7 +33,7 @@ export default async function AdminAssinaturasPage() {
           </thead>
           <tbody className="divide-y divide-ink/10">
             {profiles.map((profile) => {
-              const status = statusLabel[profile.plan_status] ?? statusLabel.ativo;
+              const status = statusLabel[profile.plan_status] ?? statusLabel.pendente;
               return (
                 <tr key={profile.id}>
                   <td className="px-4 py-3">
