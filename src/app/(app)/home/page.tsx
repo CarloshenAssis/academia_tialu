@@ -14,7 +14,7 @@ export default async function HomePage() {
   const continuando = cursos.filter((c) => c.aulasConcluidas > 0 && c.progresso < 1);
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="flex flex-col gap-7 md:mx-auto md:max-w-5xl">
       <h1 className="font-display text-xl font-bold text-ink">Bom dia, {primeiroNome} 👋</h1>
 
       {featured && (
@@ -74,12 +74,12 @@ export default async function HomePage() {
 
       <section className="flex flex-col gap-3">
         <h3 className="text-sm font-semibold text-ink">Todos os cursos</h3>
-        <ul className="flex flex-col gap-2.5">
+        <ul className="flex flex-col gap-2.5 md:grid md:grid-cols-2 md:gap-3 lg:grid-cols-3">
           {cursos.map((curso) => (
             <li key={curso.id}>
               <Link
                 href={`/cursos/${curso.id}`}
-                className="flex items-center gap-3 rounded-xl bg-card p-3 shadow-[0_2px_10px_rgba(22,33,62,0.06)]"
+                className="flex h-full items-center gap-3 rounded-xl bg-card p-3 shadow-[0_2px_10px_rgba(22,33,62,0.06)]"
               >
                 {curso.capa_url ? (
                   <Cover url={curso.capa_url} className="h-12 w-12 shrink-0 rounded-lg" />

@@ -20,7 +20,7 @@ export default async function DispositivosPage() {
   const activeDeviceId = (sessao as { device_id: string } | null)?.device_id ?? null;
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 md:mx-auto md:max-w-xl">
       <div>
         <Link
           href="/perfil"

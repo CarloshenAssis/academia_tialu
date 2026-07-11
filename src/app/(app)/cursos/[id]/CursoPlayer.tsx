@@ -51,85 +51,87 @@ export function CursoPlayer({ curso, aulas, concluidasIniciais }: Props) {
   }
 
   return (
-    <div className="-mx-5 flex flex-col gap-5">
-      <div className="aspect-video w-full bg-navy">
-        {aulaAtual && (
-          <iframe
-            key={aulaAtual.id}
-            className="h-full w-full"
-            src={`https://www.youtube.com/embed/${aulaAtual.youtube_video_id}`}
-            title={aulaAtual.titulo}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
-      </div>
-
-      <div className="flex flex-col gap-4 px-5">
-        <div>
-          <h1 className="font-display text-lg font-bold text-ink">
-            {aulaAtual?.titulo ?? curso.titulo}
-          </h1>
-          <p className="mt-0.5 text-xs text-ink-soft">
-            {curso.titulo} · Aula {indiceAtual} de {aulas.length}
-          </p>
+    <div className="-mx-5 flex flex-col gap-5 md:mx-auto md:max-w-5xl md:grid md:grid-cols-3 md:items-start md:gap-8">
+      <div className="md:col-span-2 md:flex md:flex-col md:gap-5">
+        <div className="aspect-video w-full overflow-hidden bg-navy md:rounded-2xl">
+          {aulaAtual && (
+            <iframe
+              key={aulaAtual.id}
+              className="h-full w-full"
+              src={`https://www.youtube.com/embed/${aulaAtual.youtube_video_id}`}
+              title={aulaAtual.titulo}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
         </div>
 
-        <button
-          onClick={handleToggle}
-          disabled={isPending || !aulaAtual}
-          className={`inline-flex w-fit items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
-            concluidaAtual
-              ? "bg-navy text-cream"
-              : "border border-navy text-navy"
-          } disabled:opacity-60`}
-        >
-          <Check size={16} /> {concluidaAtual ? "Aula concluída" : "Marcar como concluída"}
-        </button>
+        <div className="flex flex-col gap-4 px-5 md:px-0">
+          <div>
+            <h1 className="font-display text-lg font-bold text-ink">
+              {aulaAtual?.titulo ?? curso.titulo}
+            </h1>
+            <p className="mt-0.5 text-xs text-ink-soft">
+              {curso.titulo} · Aula {indiceAtual} de {aulas.length}
+            </p>
+          </div>
 
-        {curso.descricao && (
-          <p className="text-sm leading-relaxed text-ink-soft">{curso.descricao}</p>
-        )}
+          <button
+            onClick={handleToggle}
+            disabled={isPending || !aulaAtual}
+            className={`inline-flex w-fit items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
+              concluidaAtual
+                ? "bg-navy text-cream"
+                : "border border-navy text-navy"
+            } disabled:opacity-60`}
+          >
+            <Check size={16} /> {concluidaAtual ? "Aula concluída" : "Marcar como concluída"}
+          </button>
 
-        <section className="flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-ink">Aulas do curso</h2>
-          <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">
-            {aulas.map((aula, i) => {
-              const feita = concluidas.has(aula.id);
-              const atual = aula.id === aulaAtualId;
-              return (
-                <li key={aula.id}>
-                  <button
-                    onClick={() => setAulaAtualId(aula.id)}
-                    className="flex w-full items-center gap-3 p-3.5 text-left"
-                  >
-                    <span
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
-                        feita
-                          ? "bg-navy text-cream"
-                          : atual
-                            ? "bg-gold text-navy"
-                            : "bg-ink/10 text-ink-soft"
-                      }`}
-                    >
-                      {feita ? <Check size={13} /> : i + 1}
-                    </span>
-                    {aula.capa_url && (
-                      <Cover url={aula.capa_url} className="h-10 w-16 shrink-0 rounded-md" />
-                    )}
-                    <div className="flex-1">
-                      <p className={`text-sm leading-snug ${atual ? "font-semibold text-ink" : "text-ink"}`}>
-                        {aula.titulo}
-                      </p>
-                      <p className="text-xs text-ink-soft">{aula.duracao_min} min</p>
-                    </div>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
+          {curso.descricao && (
+            <p className="text-sm leading-relaxed text-ink-soft">{curso.descricao}</p>
+          )}
+        </div>
       </div>
+
+      <section className="flex flex-col gap-2 px-5 md:col-span-1 md:sticky md:top-10 md:px-0">
+        <h2 className="text-sm font-semibold text-ink">Aulas do curso</h2>
+        <ul className="flex flex-col divide-y divide-ink/10 rounded-xl bg-card shadow-[0_2px_10px_rgba(22,33,62,0.06)]">
+          {aulas.map((aula, i) => {
+            const feita = concluidas.has(aula.id);
+            const atual = aula.id === aulaAtualId;
+            return (
+              <li key={aula.id}>
+                <button
+                  onClick={() => setAulaAtualId(aula.id)}
+                  className="flex w-full items-center gap-3 p-3.5 text-left"
+                >
+                  <span
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
+                      feita
+                        ? "bg-navy text-cream"
+                        : atual
+                          ? "bg-gold text-navy"
+                          : "bg-ink/10 text-ink-soft"
+                    }`}
+                  >
+                    {feita ? <Check size={13} /> : i + 1}
+                  </span>
+                  {aula.capa_url && (
+                    <Cover url={aula.capa_url} className="h-10 w-16 shrink-0 rounded-md" />
+                  )}
+                  <div className="flex-1">
+                    <p className={`text-sm leading-snug ${atual ? "font-semibold text-ink" : "text-ink"}`}>
+                      {aula.titulo}
+                    </p>
+                    <p className="text-xs text-ink-soft">{aula.duracao_min} min</p>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
     </div>
   );
 }

@@ -12,29 +12,29 @@ const items = [
   { href: "/perfil", label: "Perfil", icon: User },
 ];
 
-export function BottomNav() {
+export function DesktopSideNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-ink/10 bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
-      <ul className="mx-auto flex max-w-[480px] items-stretch justify-between px-2">
+    <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col bg-navy px-5 py-8 text-cream md:flex">
+      <span className="font-display text-lg font-bold">Academia Tia Lu</span>
+      <nav className="mt-8 flex flex-col gap-1">
         {items.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
           return (
-            <li key={href} className="flex-1">
-              <Link
-                href={href}
-                className={`flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium ${
-                  active ? "text-navy" : "text-ink-soft"
-                }`}
-              >
-                <Icon size={22} strokeWidth={active ? 2.4 : 1.8} />
-                {label}
-              </Link>
-            </li>
+            <Link
+              key={href}
+              href={href}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                active ? "bg-cream/10 text-gold" : "text-cream/80 hover:bg-cream/5"
+              }`}
+            >
+              <Icon size={18} />
+              {label}
+            </Link>
           );
         })}
-      </ul>
-    </nav>
+      </nav>
+    </aside>
   );
 }

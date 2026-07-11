@@ -6,7 +6,7 @@ export default async function ComunidadePage() {
   const posts = await getComunidadePosts();
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 md:mx-auto md:max-w-2xl">
       <h1 className="font-display text-xl font-bold text-ink">Comunidade</h1>
 
       <NovoPost />

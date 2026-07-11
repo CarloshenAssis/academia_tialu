@@ -39,7 +39,7 @@ export default async function PerfilPage() {
     : null;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 md:mx-auto md:max-w-xl">
       <div className="flex flex-col items-center text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-navy text-xl font-semibold text-cream">
           {name.charAt(0).toUpperCase()}

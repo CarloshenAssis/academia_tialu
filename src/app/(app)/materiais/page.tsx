@@ -10,7 +10,7 @@ export default async function MateriaisPage() {
   const materiais = await getMateriais();
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 md:mx-auto md:max-w-2xl">
       <div>
         <h1 className="font-display text-xl font-bold text-ink">Materiais</h1>
         <p className="text-sm text-ink-soft">PDFs, planilhas e arquivos complementares</p>

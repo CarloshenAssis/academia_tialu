@@ -7,10 +7,10 @@ export default async function CursosPage() {
   const [categorias, cursos] = await Promise.all([getCategorias(), getCursos()]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 md:mx-auto md:max-w-5xl">
       <h1 className="font-display text-xl font-bold text-ink">Cursos</h1>
 
-      <label className="flex items-center gap-2 rounded-xl border border-ink/10 bg-card px-4 py-3">
+      <label className="flex items-center gap-2 rounded-xl border border-ink/10 bg-card px-4 py-3 md:max-w-md">
         <Search size={18} className="text-ink-soft" />
         <input
           type="search"
@@ -25,7 +25,7 @@ export default async function CursosPage() {
         return (
           <section key={categoria.id} className="flex flex-col gap-3">
             <h2 className="text-sm font-semibold text-ink">{categoria.nome}</h2>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 md:grid md:grid-cols-2 lg:grid-cols-3">
               {cursosDaCategoria.map((curso) => (
                 <Link
                   key={curso.id}
