@@ -63,10 +63,18 @@ export type PostModeracao = {
 
 export async function getPostsParaModeracao(): Promise<PostModeracao[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  // O hint !comunidade_posts_user_id_fkey é obrigatório: sem ele o PostgREST
+  // encontra dois caminhos até profiles (direto e via curtidas) e falha com
+  // PGRST201 — foi por isso que a moderação aparecia vazia.
+  const { data, error } = await supabase
     .from("comunidade_posts")
-    .select("id, conteudo, created_at, autor:profiles(full_name, email)")
+    .select("id, conteudo, created_at, autor:profiles!comunidade_posts_user_id_fkey(full_name, email)")
     .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("getPostsParaModeracao:", error.message);
+    return [];
+  }
 
   type Row = {
     id: string;

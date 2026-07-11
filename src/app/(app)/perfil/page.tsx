@@ -4,11 +4,11 @@ import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/app/LogoutButton";
 
 const menuItems = [
-  { label: "Configurações", href: "#" },
-  { label: "Alterar senha", href: "#" },
+  { label: "Configurações", href: "/perfil/configuracoes" },
+  { label: "Alterar senha", href: "/perfil/configuracoes" },
   { label: "Meus dispositivos conectados", href: "/perfil/dispositivos" },
-  { label: "Central de ajuda", href: "#" },
-  { label: "Termos e privacidade", href: "#" },
+  { label: "Instalar aplicativo", href: "/perfil/configuracoes#instalar" },
+  { label: "Termos e privacidade", href: "/termos" },
 ];
 
 const planLabel = { mensal: "Plano Mensal", anual: "Plano Anual" } as const;
@@ -22,7 +22,7 @@ export default async function PerfilPage() {
   const { data: profile } = user
     ? await supabase
         .from("profiles")
-        .select("full_name, email, plan, renews_at, role")
+        .select("full_name, email, plan, renews_at, role, avatar_url")
         .eq("id", user.id)
         .single()
     : { data: null };
@@ -41,9 +41,18 @@ export default async function PerfilPage() {
   return (
     <div className="flex flex-col gap-6 md:mx-auto md:max-w-xl">
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-navy text-xl font-semibold text-cream">
-          {name.charAt(0).toUpperCase()}
-        </div>
+        {profile?.avatar_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={profile.avatar_url}
+            alt=""
+            className="h-16 w-16 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-navy text-xl font-semibold text-cream">
+            {name.charAt(0).toUpperCase()}
+          </div>
+        )}
         <h1 className="mt-3 font-display text-lg font-bold text-ink">{name}</h1>
         <p className="text-sm text-ink-soft">{email}</p>
         <span className="mt-2 rounded-full bg-gold/20 px-3 py-1 text-xs font-semibold text-gold-dark">

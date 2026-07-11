@@ -256,8 +256,11 @@ export default function HomeLandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-ink/10 px-6 py-8 text-center text-xs text-ink-soft">
-        Academia Tia Lu
+      <footer className="flex flex-col items-center gap-2 border-t border-ink/10 px-6 py-8 text-center text-xs text-ink-soft">
+        <span>Academia Tia Lu</span>
+        <Link href="/termos" className="underline underline-offset-4">
+          Termos de uso e privacidade
+        </Link>
       </footer>
     </main>
   );

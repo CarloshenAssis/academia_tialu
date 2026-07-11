@@ -18,6 +18,9 @@ export interface Profile {
   asaas_customer_id: string | null;
   asaas_subscription_id: string | null;
   cpf_cnpj: string | null;
+  data_nascimento: string | null;
+  telefone: string | null;
+  avatar_url: string | null;
   created_at: string;
 }
 

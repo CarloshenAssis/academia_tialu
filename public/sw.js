@@ -1,4 +1,7 @@
-const CACHE_NAME = "tialu-v1";
+// v2: cachear páginas HTML fazia o conteúdo de um usuário aparecer pro
+// próximo após troca de conta. Só assets estáticos entram no cache.
+const CACHE_NAME = "tialu-v2";
+const STATIC_DESTINATIONS = new Set(["style", "script", "font", "image"]);
 
 self.addEventListener("install", () => {
   self.skipWaiting();
@@ -15,8 +18,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+  const url = new URL(request.url);
 
-  if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) {
+  if (request.method !== "GET" || url.origin !== self.location.origin) {
+    return;
+  }
+
+  const isStaticAsset =
+    url.pathname.startsWith("/_next/static/") || STATIC_DESTINATIONS.has(request.destination);
+
+  if (!isStaticAsset) {
     return;
   }
 

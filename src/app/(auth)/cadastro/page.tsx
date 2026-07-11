@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -9,7 +8,6 @@ import { createClient } from "@/lib/supabase/client";
 import { registerDevice } from "@/lib/device";
 
 export default function CadastroPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmEmailSent, setConfirmEmailSent] = useState(false);
@@ -38,7 +36,10 @@ export default function CadastroPage() {
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: name } },
+      options: {
+        data: { full_name: name },
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     });
 
     if (signUpError) {
@@ -61,8 +62,8 @@ export default function CadastroPage() {
       await registerDevice(supabase, data.user.id);
     }
 
-    router.push("/home");
-    router.refresh();
+    // Navegação completa: garante estado limpo pro novo usuário.
+    window.location.assign("/home");
   }
 
   if (confirmEmailSent) {
@@ -115,6 +116,14 @@ export default function CadastroPage() {
         <Button type="submit" variant="navy" className="mt-2" disabled={loading}>
           {loading ? "Criando conta..." : "Criar minha conta"}
         </Button>
+
+        <p className="text-center text-xs leading-relaxed text-ink-soft">
+          Ao criar sua conta, você concorda com os{" "}
+          <Link href="/termos" className="underline underline-offset-4">
+            Termos de uso e privacidade
+          </Link>
+          .
+        </p>
       </form>
 
       <p className="mt-6 text-center text-sm text-ink-soft">

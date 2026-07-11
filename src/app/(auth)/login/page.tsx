@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -11,7 +10,6 @@ import { registerDevice } from "@/lib/device";
 const subscribe = () => () => {};
 
 export default function LoginPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,8 +47,9 @@ export default function LoginPage() {
       await registerDevice(supabase, data.user.id);
     }
 
-    router.push("/home");
-    router.refresh();
+    // Navegação completa (não router.push): descarta o cache de páginas do
+    // usuário anterior — sem isso, trocar de conta mostrava dados velhos.
+    window.location.assign("/home");
   }
 
   return (
@@ -75,7 +74,10 @@ export default function LoginPage() {
 
         {error && <p className="text-sm text-danger">{error}</p>}
 
-        <Link href="#" className="self-end text-xs font-medium text-ink-soft underline underline-offset-4">
+        <Link
+          href="/recuperar-senha"
+          className="self-end text-xs font-medium text-ink-soft underline underline-offset-4"
+        >
           Esqueci minha senha
         </Link>
 

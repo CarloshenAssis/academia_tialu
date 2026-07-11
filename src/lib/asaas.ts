@@ -48,6 +48,7 @@ export async function criarAssinaturaAsaas(params: {
   value: number;
   nextDueDate: string;
   description: string;
+  successUrl: string;
 }): Promise<AsaasSubscription> {
   return asaasFetch<AsaasSubscription>("/subscriptions", {
     method: "POST",
@@ -58,6 +59,7 @@ export async function criarAssinaturaAsaas(params: {
       value: params.value,
       nextDueDate: params.nextDueDate,
       description: params.description,
+      callback: { successUrl: params.successUrl, autoRedirect: true },
     }),
   });
 }
@@ -76,4 +78,18 @@ export async function buscarPrimeiraCobranca(
     `/subscriptions/${subscriptionId}/payments`
   );
   return data.data?.[0];
+}
+
+// Garante o redirecionamento pós-pagamento também em cobranças criadas
+// antes do callback existir na assinatura. Falha aqui não deve derrubar o
+// fluxo — o pior caso é a aluna ver o comprovante do Asaas.
+export async function aplicarCallbackNaCobranca(paymentId: string, successUrl: string) {
+  try {
+    await asaasFetch(`/payments/${paymentId}`, {
+      method: "PUT",
+      body: JSON.stringify({ callback: { successUrl, autoRedirect: true } }),
+    });
+  } catch {
+    // não-fatal
+  }
 }

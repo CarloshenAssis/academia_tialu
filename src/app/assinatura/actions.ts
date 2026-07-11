@@ -1,9 +1,21 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { criarClienteAsaas, criarAssinaturaAsaas, buscarPrimeiraCobranca } from "@/lib/asaas";
+import {
+  criarClienteAsaas,
+  criarAssinaturaAsaas,
+  buscarPrimeiraCobranca,
+  aplicarCallbackNaCobranca,
+} from "@/lib/asaas";
+
+async function siteUrl() {
+  const host = (await headers()).get("host") ?? "academiatialu.vercel.app";
+  const protocol = host.startsWith("localhost") ? "http" : "https";
+  return `${protocol}://${host}`;
+}
 
 interface AssinaturaState {
   error?: string;
@@ -50,6 +62,8 @@ export async function iniciarAssinatura(
         .eq("id", user.id);
     }
 
+    const successUrl = `${await siteUrl()}/assinatura/sucesso`;
+
     let subscriptionId = profile.asaas_subscription_id;
     if (!subscriptionId) {
       const hoje = new Date().toISOString().slice(0, 10);
@@ -58,6 +72,7 @@ export async function iniciarAssinatura(
         value: 29.9,
         nextDueDate: hoje,
         description: "Academia Tia Lu — assinatura mensal",
+        successUrl,
       });
       subscriptionId = assinatura.id;
       await service
@@ -67,7 +82,10 @@ export async function iniciarAssinatura(
     }
 
     const cobranca = await buscarPrimeiraCobranca(subscriptionId);
-    invoiceUrl = cobranca?.invoiceUrl;
+    if (cobranca) {
+      await aplicarCallbackNaCobranca(cobranca.id, successUrl);
+      invoiceUrl = cobranca.invoiceUrl;
+    }
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Erro ao iniciar a assinatura." };
   }
