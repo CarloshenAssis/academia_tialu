@@ -19,7 +19,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
+  // O Asaas manda uma chamada de teste (corpo vazio/sem JSON) ao ativar o
+  // webhook, só pra checar token + conectividade — sem isso, request.json()
+  // lançava e o handler devolvia 500, e a ativação nunca vingava.
+  let body: { event?: string; payment?: { subscription?: string; dueDate?: string } } = {};
+  try {
+    const texto = await request.text();
+    if (texto) body = JSON.parse(texto);
+  } catch {
+    logger.info("webhook_asaas_corpo_vazio_ou_invalido", {});
+  }
+
   const event = body?.event as string | undefined;
   const payment = body?.payment as { subscription?: string; dueDate?: string } | undefined;
   const subscriptionId = payment?.subscription;
