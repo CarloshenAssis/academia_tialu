@@ -3,6 +3,13 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { statusParaEvento } from "@/lib/asaas-webhook";
 import { logger } from "@/lib/log";
 
+// Alguns painéis (Asaas incluído) fazem uma checagem de conectividade na URL
+// antes de ativar/reativar o webhook. Sem isso, essa checagem batia 405 e o
+// webhook nunca saía do estado "Interrompido".
+export async function GET() {
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(request: NextRequest) {
   const token = request.headers.get("asaas-access-token");
   if (!token || token !== process.env.ASAAS_WEBHOOK_TOKEN) {
