@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type {
   Aula,
@@ -39,7 +40,8 @@ export async function getCursos(): Promise<CursoComCategoria[]> {
     .from("cursos")
     .select("*, categoria:categorias(nome)")
     .eq("publicado", true)
-    .order("ordem");
+    .order("ordem")
+    .limit(200);
   return (data as CursoComCategoria[]) ?? [];
 }
 
@@ -59,7 +61,8 @@ export async function getAulas(cursoId: string): Promise<Aula[]> {
     .from("aulas")
     .select("*")
     .eq("curso_id", cursoId)
-    .order("ordem");
+    .order("ordem")
+    .limit(200);
   return (data as Aula[]) ?? [];
 }
 
@@ -128,24 +131,41 @@ export async function getCursosComProgresso(): Promise<CursoComProgresso[]> {
   });
 }
 
+// Gerar uma signed URL nova a cada carregamento de página faz o link mudar
+// de valor toda vez (token diferente), então o navegador nunca reaproveita
+// do cache HTTP e o mesmo PDF é baixado por inteiro a cada visita — isso já
+// estourou o egress de outros projetos com o mesmo padrão. Cacheamos o
+// resultado (via Next.js Data Cache, que persiste entre requisições na
+// Vercel) por menos tempo que a validade real da URL, então o mesmo link é
+// reaproveitado e o navegador consegue cachear o arquivo de verdade.
+const getSignedUrlCacheado = unstable_cache(
+  async (caminho: string) => {
+    const { createServiceClient } = await import("@/lib/supabase/service");
+    const service = createServiceClient();
+    const { data } = await service.storage.from("materiais").createSignedUrl(caminho, 3600);
+    return data?.signedUrl ?? null;
+  },
+  ["material-signed-url"],
+  { revalidate: 3000 }
+);
+
 export async function getMateriais(): Promise<(Material & { curso: Pick<Curso, "titulo"> | null })[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("materiais")
     .select("*, curso:cursos(titulo)")
-    .order("created_at");
+    .order("created_at")
+    .limit(200);
 
   const materiais = (data as (Material & { curso: Pick<Curso, "titulo"> | null })[]) ?? [];
 
   // arquivo_url guarda o caminho no bucket privado "materiais"; geramos um
-  // link assinado de curta duração na hora de exibir, em vez de expor o
+  // link assinado (cacheado — ver getSignedUrlCacheado) em vez de expor o
   // bucket publicamente.
   return Promise.all(
     materiais.map(async (material) => {
-      const { data: signed } = await supabase.storage
-        .from("materiais")
-        .createSignedUrl(material.arquivo_url, 60 * 10);
-      return { ...material, arquivo_url: signed?.signedUrl ?? "#" };
+      const signedUrl = await getSignedUrlCacheado(material.arquivo_url);
+      return { ...material, arquivo_url: signedUrl ?? "#" };
     })
   );
 }

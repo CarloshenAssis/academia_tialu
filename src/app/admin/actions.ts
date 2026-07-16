@@ -19,6 +19,12 @@ async function uploadCapa(
   file: FormDataEntryValue | null
 ): Promise<{ url: string | null; error?: string }> {
   if (!(file instanceof File) || file.size === 0) return { url: null };
+  // Sem limite, uma foto direto do celular (10+MB) vira o "peso padrão" de
+  // toda capa exibida em miniatura — mesmo problema de egress visto em
+  // outros projetos com Supabase Storage.
+  if (file.size > 2 * 1024 * 1024) {
+    return { url: null, error: "A imagem de capa precisa ter no máximo 2 MB." };
+  }
 
   const path = `${crypto.randomUUID()}-${file.name}`;
   const { error } = await supabase.storage.from("capas").upload(path, file);
