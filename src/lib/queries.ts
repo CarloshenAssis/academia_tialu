@@ -167,12 +167,15 @@ export async function getComunidadePosts(): Promise<PostComAutor[]> {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Limite fixo: sem ele, o feed cresce sem teto e cada visita carrega a
+  // comunidade inteira do banco.
   const { data, error } = await supabase
     .from("comunidade_posts")
     .select(
       "id, conteudo, created_at, autor:profiles_publicas!comunidade_posts_user_id_fkey(full_name, role), curtidas:comunidade_curtidas(user_id), respostas:comunidade_respostas(id)"
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(50);
 
   if (error) {
     console.error("getComunidadePosts:", error.message);

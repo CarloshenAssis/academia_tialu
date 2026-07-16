@@ -69,7 +69,8 @@ export async function getPostsParaModeracao(): Promise<PostModeracao[]> {
   const { data, error } = await supabase
     .from("comunidade_posts")
     .select("id, conteudo, created_at, autor:profiles!comunidade_posts_user_id_fkey(full_name, email)")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(100);
 
   if (error) {
     console.error("getPostsParaModeracao:", error.message);

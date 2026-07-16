@@ -10,6 +10,8 @@ import {
   buscarPrimeiraCobranca,
   aplicarCallbackNaCobranca,
 } from "@/lib/asaas";
+import { validarCpfCnpj } from "@/lib/asaas-webhook";
+import { logger } from "@/lib/log";
 
 async function siteUrl() {
   const host = (await headers()).get("host") ?? "academiatialu.vercel.app";
@@ -31,8 +33,8 @@ export async function iniciarAssinatura(
   } = await supabase.auth.getUser();
   if (!user) return { error: "Sessão expirada. Faça login novamente." };
 
-  const cpfCnpj = String(formData.get("cpf_cnpj") ?? "").replace(/\D/g, "");
-  if (cpfCnpj.length !== 11 && cpfCnpj.length !== 14) {
+  const cpfCnpj = validarCpfCnpj(String(formData.get("cpf_cnpj") ?? ""));
+  if (!cpfCnpj) {
     return { error: "Informe um CPF ou CNPJ válido." };
   }
 
@@ -87,6 +89,10 @@ export async function iniciarAssinatura(
       invoiceUrl = cobranca.invoiceUrl;
     }
   } catch (err) {
+    logger.erro("assinatura_iniciar_falhou", {
+      userId: user.id,
+      erro: err instanceof Error ? err.message : String(err),
+    });
     return { error: err instanceof Error ? err.message : "Erro ao iniciar a assinatura." };
   }
 
